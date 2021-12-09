@@ -12,6 +12,7 @@ export class ListarGastoComponent implements OnInit, OnDestroy {
   presupuesto: number;
   restante: number;
 
+  listGastos: any = [];
 
   constructor(private _presupuestoService: PresupuestoService) {
 
@@ -19,6 +20,8 @@ export class ListarGastoComponent implements OnInit, OnDestroy {
     this.restante = 0;
 
     this.subscription = this._presupuestoService.getGastos().subscribe(data => {
+      this.restante -= data.cantidad;
+      this.listGastos.push(data);
 
     })
    }
@@ -30,6 +33,16 @@ export class ListarGastoComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.subscription.unsubscribe();
+  }
+
+  aplicarColorRestante(): any{
+    if((this.presupuesto / 4) > this.restante) {
+      return 'alert alert-danger';
+    } else if ((this.presupuesto / 2) > this.restante) {
+      return 'alert alert-warning';
+    } else {
+      return 'alert alert-secondary';
+    }
   }
 
 }
